@@ -46,19 +46,19 @@ let currentEyedropperSize = 1;
 const colorSwatch = document.getElementById('colorSwatch');
 const rgbValue = document.getElementById('rgbValue');
 const hexValue = document.getElementById('hexValue');
-const findMatchBtn = document.getElementById('findMatchBtn');
 const resultsSection = document.getElementById('resultsSection');
 const matchList = document.getElementById('matchList');
 const legendList = document.getElementById('legendList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 const exportCsvBtn = document.getElementById('exportCsvBtn');
 const exportPdfBtn = document.getElementById('exportPdfBtn');
-const zoomResetBtn = document.getElementById('zoomResetBtn');
 const zoomLevel = document.getElementById('zoomLevel');
 const minimapContainer = document.getElementById('minimapContainer');
 const minimapCanvas = document.getElementById('minimapCanvas');
 const minimapCtx = minimapCanvas.getContext('2d');
 const minimapViewport = document.getElementById('minimapViewport');
+const headerFull = document.getElementById('headerFull');
+const headerCompact = document.getElementById('headerCompact');
 
 async function init() {
     try {
@@ -80,7 +80,6 @@ async function init() {
         console.error('Failed to load DMC position data:', e);
     }
 
-    resultsSection.style.display = 'none';
     workspace.style.display = 'none';
 
     colorHistory = [];
@@ -110,13 +109,15 @@ function setupEventListeners() {
         setZoom(newZoom);
     });
 
-    zoomResetBtn.addEventListener('click', () => {
-        setZoom(1);
-        zoomSlider.value = 1;
-        offsetX = 0;
-        offsetY = 0;
-        render();
-    });
+    // Compact header - change image button
+    const changeImageBtn = document.getElementById('changeImageBtn');
+    const imageInputCompact = document.getElementById('imageInputCompact');
+    if (changeImageBtn && imageInputCompact) {
+        changeImageBtn.addEventListener('click', () => imageInputCompact.click());
+        imageInputCompact.addEventListener('change', (e) => {
+            if (e.target.files.length) handleImageFile(e.target.files[0]);
+        });
+    }
 
     sizeButtons.addEventListener('click', (e) => {
         if (e.target.classList.contains('size-btn')) {
@@ -139,7 +140,6 @@ function setupEventListeners() {
     imageCanvas.addEventListener('touchend', onTouchEnd);
 
     // Buttons
-    findMatchBtn.addEventListener('click', findMatches);
     clearHistoryBtn.addEventListener('click', clearHistory);
     exportCsvBtn.addEventListener('click', exportToCSV);
     if (exportPdfBtn) exportPdfBtn.addEventListener('click', exportToPDF);
@@ -194,11 +194,13 @@ function handleImageFile(file) {
             tempCtx.drawImage(img, 0, 0);
             imageDataCache = tempCtx.getImageData(0, 0, img.width, img.height);
 
+            // Switch to compact header
+            headerFull.style.display = 'none';
+            uploadArea.style.display = 'none';
+            headerCompact.style.display = 'flex';
             workspace.style.display = 'flex';
-            resultsSection.style.display = 'none';
             setupViewport();
             pickedColor = null;
-            findMatchBtn.disabled = true;
         };
         img.onerror = () => {
             alert('画像の読み込みに失敗しました。');
@@ -683,9 +685,10 @@ function pickColor(canvasX, canvasY) {
         pickedY = Math.round(imgCoords.y);
         pickedColor = color;
         colorSwatch.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
-        rgbValue.textContent = `RGB: ${color.r}, ${color.g}, ${color.b}`;
-        hexValue.textContent = `HEX: ${color.hex}`;
-        findMatchBtn.disabled = false;
+        rgbValue.textContent = `${color.r}, ${color.g}, ${color.b}`;
+        hexValue.textContent = `${color.hex}`;
+        // Auto-search DMC matches
+        if (dmcColors.length > 0) findMatches();
     }
 }
 
@@ -756,8 +759,7 @@ function findMatches() {
       </div>
     `).join('');
 
-    resultsSection.style.display = 'block';
-    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Results are always visible in the hero area
 }
 
 function selectMatch(index) {
@@ -922,12 +924,11 @@ function deleteLegendColor(dmcId) {
         localStorage.setItem('dmcHistory', JSON.stringify(colorHistory));
 
         if (colorHistory.length === 0) {
-            resultsSection.style.display = 'none';
             pickedColor = null;
-            findMatchBtn.disabled = true;
-            colorSwatch.style.backgroundColor = '';
-            rgbValue.textContent = 'RGB: -';
-            hexValue.textContent = 'HEX: -';
+            colorSwatch.style.backgroundColor = '#444';
+            rgbValue.textContent = '-';
+            hexValue.textContent = '-';
+            matchList.innerHTML = '<div class="match-empty">画像をクリックして色を拾ってください</div>';
         }
 
         render();
@@ -947,12 +948,12 @@ function clearHistory() {
         colorHistory = [];
         localStorage.setItem('dmcHistory', JSON.stringify(colorHistory));
 
-        resultsSection.style.display = 'none';
         pickedColor = null;
-        findMatchBtn.disabled = true;
-        colorSwatch.style.backgroundColor = '';
-        rgbValue.textContent = 'RGB: -';
-        hexValue.textContent = 'HEX: -';
+        // reset pick state
+        colorSwatch.style.backgroundColor = '#444';
+        rgbValue.textContent = '-';
+        hexValue.textContent = '-';
+        matchList.innerHTML = '<div class="match-empty">画像をクリックして色を拾ってください</div>';
 
         render();
         renderLegend();
