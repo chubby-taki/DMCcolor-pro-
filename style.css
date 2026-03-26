@@ -301,8 +301,8 @@ body {
 
 /* Range inputs - WebKit */
 .toolbar input[type="range"] {
-  width: 72px;
-  height: 3px;
+  width: 100px;
+  height: 4px;
   border-radius: 2px;
   outline: none;
   -webkit-appearance: none;
@@ -314,8 +314,8 @@ body {
 
 .toolbar input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #6b5344;
   cursor: pointer;
@@ -336,8 +336,8 @@ body {
 
 /* Range inputs - Firefox */
 .toolbar input[type="range"]::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #6b5344;
   cursor: pointer;
@@ -346,7 +346,7 @@ body {
 }
 
 .toolbar input[type="range"]::-moz-range-track {
-  height: 3px;
+  height: 4px;
   border-radius: 2px;
   background: #dddbd5;
   border: none;
