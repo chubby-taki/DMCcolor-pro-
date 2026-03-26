@@ -756,9 +756,6 @@ function findMatches() {
       </div>
     `).join('');
 
-    // 1位を自動的に履歴に追加
-    addToHistory(matches[0]);
-
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
