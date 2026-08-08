@@ -10,117 +10,62 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* 合言葉ゲート */
-    #gate {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: #FBEFF0;
-    }
-    #gate .gate-box {
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
+    /* 使い方の案内（アップロード前だけ表示する） */
+    .howto {
+      max-width: 880px;
+      margin: 24px auto 0;
+      padding: 0 20px;
       font-family: 'Noto Sans JP', sans-serif;
-      color: #5A3A44;
+      color: #6b5344;
     }
-    #gate h2 { margin: 0 0 8px; font-size: 1.15rem; font-weight: 700; }
-    #gate p { margin: 0 0 20px; font-size: .85rem; line-height: 1.7; }
-    #gate input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px 14px;
-      font-size: 1rem;
+    .howto-lead {
+      margin: 0 0 16px;
+      font-size: .95rem;
+      font-weight: 500;
       text-align: center;
-      color: #5A3A44;
-      background: #fff;
-      border: 1px solid #E4C8CE;
-      border-radius: 8px;
+      color: #2c2416;
     }
-    #gate input:focus { outline: 2px solid #B04965; outline-offset: 1px; }
-    #gate button {
-      width: 100%;
-      margin-top: 12px;
-      padding: 12px;
-      font-size: 1rem;
+    .howto-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .howto-step {
+      padding: 16px;
+      background: #fcfcfa;
+      border: 1px solid #eae8e3;
+      border-radius: 10px;
+    }
+    .howto-step .howto-num {
+      display: block;
+      margin-bottom: 6px;
+      font-size: .7rem;
       font-weight: 700;
-      color: #fff;
-      background: #B04965;
-      border: 0;
-      border-radius: 8px;
-      cursor: pointer;
+      letter-spacing: .08em;
+      color: #b0ada6;
     }
-    #gate .gate-error { min-height: 1.4em; margin: 12px 0 0; font-size: .85rem; color: #B04965; }
-    body.gate-locked .app-container { display: none; }
+    .howto-step p {
+      margin: 0;
+      font-size: .85rem;
+      line-height: 1.7;
+    }
+    .howto-note {
+      margin: 16px 0 0;
+      font-size: .75rem;
+      line-height: 1.8;
+      text-align: center;
+      color: #b0ada6;
+    }
+    @media (max-width: 640px) {
+      .howto-steps { grid-template-columns: 1fr; }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 
-<body class="gate-locked">
-  <!-- 合言葉ゲート（LINEで合言葉を配布） -->
-  <div id="gate">
-    <div class="gate-box">
-      <h2>DMC Color Matcher Pro</h2>
-      <p>LINEでお伝えしている合言葉を入力してください。</p>
-      <input id="gateInput" type="text" autocomplete="off" placeholder="合言葉">
-      <button id="gateBtn" type="button">はじめる</button>
-      <p class="gate-error" id="gateError"></p>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      var KEY = 'dmcpro_unlocked';
-      var OK = ['うちのこ', 'うちの子'];
-      var gate = document.getElementById('gate');
-      var input = document.getElementById('gateInput');
-      var btn = document.getElementById('gateBtn');
-      var err = document.getElementById('gateError');
-
-      // 空白除去・全角半角・カタカナ→ひらがな を吸収して比較する
-      function normalize(v) {
-        return (v || '')
-          .normalize('NFKC')
-          .replace(/[\s　]/g, '')
-          .replace(/[ァ-ヶ]/g, function (c) {
-            return String.fromCharCode(c.charCodeAt(0) - 0x60);
-          });
-      }
-
-      function unlock() {
-        document.body.classList.remove('gate-locked');
-        gate.style.display = 'none';
-        window.dispatchEvent(new Event('resize'));
-      }
-
-      try {
-        if (localStorage.getItem(KEY) === '1') { unlock(); return; }
-      } catch (e) { /* localStorageが使えなくても、合言葉を入れれば使える */ }
-
-      function submit() {
-        if (OK.indexOf(normalize(input.value)) !== -1) {
-          try { localStorage.setItem(KEY, '1'); } catch (e) {}
-          unlock();
-        } else {
-          err.textContent = '合言葉がちがうようです。もう一度お試しください。';
-          input.select();
-        }
-      }
-
-      btn.addEventListener('click', submit);
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); submit(); }
-      });
-      input.focus();
-    })();
-  </script>
-
+<body>
   <div class="app-container">
     <!-- Header (Full) -->
     <header class="header" id="headerFull">
@@ -149,6 +94,29 @@
         <p class="upload-text-desktop">画像をドロップ または クリックして選択</p>
         <p class="upload-text-mobile">タップして画像を選択</p>
       </div>
+    </div>
+
+    <!-- 使い方の案内（画像を読み込むと隠れる） -->
+    <div class="howto" id="howto">
+      <p class="howto-lead">写真から、いちばん近いDMCの糸番号を調べられます</p>
+      <div class="howto-steps">
+        <div class="howto-step">
+          <span class="howto-num">STEP 1</span>
+          <p>うちの子の写真を選びます。うまく撮れていなくても大丈夫です</p>
+        </div>
+        <div class="howto-step">
+          <span class="howto-num">STEP 2</span>
+          <p>色を知りたいところをタップ。拡大して、毛の1本まで狙えます</p>
+        </div>
+        <div class="howto-step">
+          <span class="howto-num">STEP 3</span>
+          <p>近い糸が5色出ます。選ぶと一覧に貯まり、CSVとPDFで持ち出せます</p>
+        </div>
+      </div>
+      <p class="howto-note">
+        写真はこの端末の中だけで処理されます。どこにも送信されません。<br>
+        作った takis／リアルペット刺繍
+      </p>
     </div>
 
     <!-- Main Workspace -->
