@@ -197,6 +197,8 @@ function handleImageFile(file) {
             // Switch to compact header
             headerFull.style.display = 'none';
             uploadArea.style.display = 'none';
+            const howto = document.getElementById('howto');
+            if (howto) howto.style.display = 'none';
             headerCompact.style.display = 'flex';
             workspace.style.display = 'flex';
             setupViewport();

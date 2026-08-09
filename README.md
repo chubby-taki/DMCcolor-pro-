@@ -1,34 +1,41 @@
 # DMC Color Matcher Pro
 
-プロフェッショナル刺繍糸カラーマッチングアプリケーション
+写真から、いちばん近いDMC刺繍糸の色番号を調べるツール。
+リアルペット刺繍の色選びのために作りました。
 
-## 機能
+https://chubby-taki.github.io/DMCcolor-pro-/
 
-- 📷 画像アップロード＆ズーム
-- 🎨 スポイトツールで色抽出
-- 🧵 DMC刺繍糸への自動マッチング
-- 📋 Color Legend（抽出した色の一覧）
-- 📍 DMC色番号の収納位置表示（列-行）
-- 📥 CSV/PDF出力
+どなたでも無料で使えます。登録も入力も要りません。
+
+## できること
+
+- 写真を読み込んで、拡大しながら色を拾う（毛の1本まで狙える）
+- 拾った色に近いDMC糸を5色まで提示（CIEDE2000で色差を計算）
+- 選んだ糸を一覧に貯める（Color Legend）
+- DMC色番号の収納位置を表示（列-行）
+- 一覧をCSV／PDFで書き出す
 
 ## 使い方
 
-1. 画像をアップロード
-2. スポイトツールで色をピックアップ
-3. 「DMC色を検索」ボタンをクリック
-4. 自動的にColor Legendに追加されます
+1. 写真を選ぶ。うまく撮れていなくても大丈夫
+2. 色を知りたいところをタップ（またはクリック）
+3. 近い糸が5色出るので、使うものを選ぶ
+4. 一覧に貯まったら、CSVかPDFで持ち出す
 
-## ライブデモ
+## プライバシー
 
-https://[your-username].github.io/DMCcolor-pro/
+写真はブラウザの中だけで処理されます。サーバーには送信されません。
+外部への通信は、同梱の `dmc_master_data.json` と `dmc_position_data.json` の読み込みのみです。
 
-## 技術スタック
+## 技術
+
+HTML / CSS / Vanilla JavaScript のみ。ビルド不要。
+`main` ブランチを GitHub Pages がそのまま公開しています。
 
 - HTML5 Canvas
-- Vanilla JavaScript
-- CIEDE2000 色差計算
-- jsPDF (PDF出力)
+- CIEDE2000 色差計算（`ciede2000.js`）
+- jsPDF・FileSaver（CDN読み込み。失敗しても本体は動く）
 
 ## ライセンス
 
-Private - Real Pet Embroidery
+Private - Real Pet Embroidery / takis
