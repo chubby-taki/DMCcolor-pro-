@@ -67,6 +67,26 @@
       text-align: center;
       color: #b0ada6;
     }
+    .howto-line {
+      margin: 12px 0 0;
+      text-align: center;
+    }
+    .howto-line a {
+      display: inline-block;
+      padding: 10px 16px;
+      border: 1px solid #b04965;
+      border-radius: 8px;
+      color: #87344d;
+      background: #fbeff0;
+      font-size: .875rem;
+      font-weight: 500;
+      line-height: 1.6;
+      text-decoration: none;
+    }
+    .howto-line a:hover,
+    .howto-line a:focus-visible {
+      text-decoration: underline;
+    }
     @media (max-width: 640px) {
       .howto-steps { grid-template-columns: 1fr; }
     }
@@ -127,6 +147,11 @@
       <p class="howto-note">
         写真はこの端末の中だけで処理されます。どこにも送信されません。<br>
         制作　takis（リアルペット刺繍）
+      </p>
+      <p class="howto-line">
+        <a id="communityLineLink" href="https://lin.ee/4PaXQ3C" target="_blank" rel="noopener noreferrer">
+          刺繍アプリの新作・更新をLINEで受け取る
+        </a>
       </p>
     </div>
 
@@ -216,6 +241,13 @@
 
   <script src="ciede2000.js"></script>
   <script src="app.js"></script>
+  <script>
+    document.getElementById('communityLineLink').addEventListener('click', () => {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'dmc_line_click');
+      }
+    });
+  </script>
 </body>
 
 </html>
