@@ -690,7 +690,7 @@ function pickColor(canvasX, canvasY) {
         rgbValue.textContent = `${color.r}, ${color.g}, ${color.b}`;
         hexValue.textContent = `${color.hex}`;
         // Auto-search DMC matches
-        if (dmcColors.length > 0) findMatches();
+        if (dmcColors.length > 0) findMatches(true);
     }
 }
 
@@ -733,7 +733,7 @@ function getColorAt(canvasX, canvasY, size) {
 }
 
 // Find DMC matches
-function findMatches() {
+function findMatches(recordUsage = false) {
     if (!pickedColor || dmcColors.length === 0) return;
     const targetLab = ColorMatcher.rgbToLab(pickedColor.r, pickedColor.g, pickedColor.b);
 
@@ -761,7 +761,9 @@ function findMatches() {
       </div>
     `).join('');
 
-    // Results are always visible in the hero area
+    if (recordUsage && matches.length > 0 && typeof window.gtag === 'function') {
+        window.gtag('event', 'dmc_color_match');
+    }
 }
 
 function selectMatch(index) {

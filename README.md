@@ -25,7 +25,7 @@ https://chubby-taki.github.io/DMCcolor-pro-/
 ## プライバシー
 
 写真はブラウザの中だけで処理されます。サーバーには送信されません。
-外部への通信は、同梱の `dmc_master_data.json` と `dmc_position_data.json` の読み込みのみです。
+Google アナリティクスでページの閲覧と色の検索操作を計測します。写真・選んだ色・糸番号は計測データに含めません。
 
 ## 技術
 
